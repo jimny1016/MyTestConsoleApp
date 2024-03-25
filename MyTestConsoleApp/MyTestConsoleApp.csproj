@@ -8,13 +8,52 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <COMReference Include="AutoItX3Lib">
+      <VersionMinor>0</VersionMinor>
+      <VersionMajor>1</VersionMajor>
+      <Guid>f8937e53-d444-4e71-9275-35b64210cc3b</Guid>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>false</Isolated>
+      <EmbedInteropTypes>true</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Emgu.CV" Version="4.8.1.5350" />
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="AutoItX3.Assembly">
+      <HintPath>plugin\AutoItX3.Assembly.dll</HintPath>
+    </Reference>
     <Reference Include="MediaInfoNET">
       <HintPath>plugin\MediaInfoNET.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Firmwares\K2862_50343_64LQFP_HV130_20240201_96E9H.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Firmwares\K2862_50343_64LQFP_HV133_20240308_2439H.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="plugin\AutoItX3.Assembly.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="plugin\AutoItX3.Assembly.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="plugin\AutoItX3.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="plugin\AutoItX3_x64.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="plugin\MediaInfoNET.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
