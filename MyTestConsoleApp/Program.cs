@@ -6,7 +6,7 @@ namespace MyTestConsoleApp
     {
         static void Main(string[] args)
         {
-            new AutoItX3Test();
+            _ = new AutoItX3Test();
         }
     }
 }

@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="plugin\AutoItX3.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
     <COMReference Include="AutoItX3Lib">
       <VersionMinor>0</VersionMinor>
       <VersionMajor>1</VersionMajor>
@@ -33,6 +37,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ApplicationDefinition Include="plugin\AutoItX3.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </ApplicationDefinition>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="Firmwares\K2862_50343_64LQFP_HV130_20240201_96E9H.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -40,20 +50,21 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="plugin\AutoItX3.Assembly.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
     <None Update="plugin\AutoItX3.Assembly.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="plugin\AutoItX3.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
     <None Update="plugin\AutoItX3_x64.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
     <None Update="plugin\MediaInfoNET.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy &quot;$(ProjectDir)plugin\AutoItX3.dll&quot; &quot;$(TargetDir)&quot; /E /I /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)plugin\AutoItX3_x64.dll&quot; &quot;$(TargetDir)&quot; /E /I /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)plugin\AutoItX3.Assembly.xml&quot; &quot;$(TargetDir)&quot; /E /I /Y" />
+  </Target>
 
 </Project>
