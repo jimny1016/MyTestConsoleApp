@@ -1,4 +1,6 @@
 ﻿using MyTestConsoleApp.MyTestClass;
+using System.Runtime.InteropServices;
+using WindowsDisplayAPI;
 
 namespace MyTestConsoleApp
 {
