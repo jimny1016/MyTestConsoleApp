@@ -1,10 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
   <ItemGroup>
@@ -65,7 +66,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy &quot;$(ProjectDir)plugin\AutoItX3.dll&quot; &quot;$(TargetDir)&quot; /E /I /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)plugin\AutoItX3_x64.dll&quot; &quot;$(TargetDir)&quot; /E /I /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)plugin\AutoItX3.Assembly.xml&quot; &quot;$(TargetDir)&quot; /E /I /Y" />
+    <Exec Command="xcopy &quot;$(ProjectDir)plugin\AutoItX3.dll&quot; &quot;$(TargetDir)&quot; /E /I /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)plugin\AutoItX3_x64.dll&quot; &quot;$(TargetDir)&quot; /E /I /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)plugin\AutoItX3.Assembly.xml&quot; &quot;$(TargetDir)&quot; /E /I /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)Y70UpdateFiles\*.*&quot; &quot;$(TargetDir)/Y70UpdateFiles&quot; /E /I /Y" />
   </Target>
 
 </Project>
