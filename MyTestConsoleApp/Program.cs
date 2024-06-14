@@ -18,7 +18,7 @@ namespace MyTestConsoleApp
                 return;
             }
 
-            _ = new AutoItX3Test();
+            _ = new DDCCIControl();
         }
 
         public static bool IsAdministrator()

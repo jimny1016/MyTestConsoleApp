@@ -24,7 +24,8 @@ namespace MyTestConsoleApp.MyTestClass
             {
                 if (DisplayModes[i].infoType == DISPLAYCONFIG_MODE_INFO_TYPE.DISPLAYCONFIG_MODE_INFO_TYPE_TARGET)
                 {
-                    Console.WriteLine(MonitorFriendlyName(DisplayModes[i].adapterId, DisplayModes[i].id));
+                    var friendlyName = MonitorFriendlyName(DisplayModes[i].adapterId, DisplayModes[i].id);
+                    Console.WriteLine(friendlyName);
                 }
             }
             Console.ReadLine();
