@@ -53,10 +53,10 @@ namespace MyTestConsoleApp.MyTestClass
                 public static extern Win32.HRESULT GetPhysicalMonitorsFromIDirect3DDevice9([In] ref IDirect3DDevice9 pDirect3DDevice9, [In] UInt32 dwPhysicalMonitorArraySize, [Out] PHYSICAL_MONITOR[] pPhysicalMonitorArray);
 
                 [DllImport("Dxva2.dll", ExactSpelling = true, SetLastError = true, PreserveSig = false)]
-                public static extern void DestroyPhysicalMonitor([In] IntPtr hMonitor);
+                public static extern bool DestroyPhysicalMonitor([In] IntPtr hMonitor);
 
                 [DllImport("Dxva2.dll", ExactSpelling = true, SetLastError = true, PreserveSig = false)]
-                public static extern void DestroyPhysicalMonitors([In] UInt32 dwPhysicalMonitorArraySize, [Out] PHYSICAL_MONITOR[] pPhysicalMonitorArray);
+                public static extern bool DestroyPhysicalMonitors([In] UInt32 dwPhysicalMonitorArraySize, [Out] PHYSICAL_MONITOR[] pPhysicalMonitorArray);
 
                 [DllImport("dxva2.dll", SetLastError = true)]
                 public static extern bool GetCapabilitiesStringLength(IntPtr hMonitor, out uint pdwCapabilitiesStringLengthInCharacters);
@@ -67,9 +67,71 @@ namespace MyTestConsoleApp.MyTestClass
                 [DllImport("dxva2.dll", SetLastError = true)]
                 public static extern bool SetVCPFeature(IntPtr hMonitor, byte bVCPCode, uint dwNewValue);
 
+                [DllImport("Dxva2.dll", SetLastError = true)]
+                [return: MarshalAs(UnmanagedType.Bool)]
+                public static extern bool GetVCPFeatureAndVCPFeatureReply(
+                    IntPtr hMonitor,
+                    byte bVCPCode,
+                    out LPMC_VCP_CODE_TYPE pvct,
+                    out uint pdwCurrentValue,
+                    out uint pdwMaximumValue);
+
+                [Flags]
+                public enum MC_CAPS
+                {
+                    MC_CAPS_NONE = 0x00000000,
+                    MC_CAPS_MONITOR_TECHNOLOGY_TYPE = 0x00000001,
+                    MC_CAPS_BRIGHTNESS = 0x00000002,
+                    MC_CAPS_CONTRAST = 0x00000004,
+                    MC_CAPS_COLOR_TEMPERATURE = 0x00000008,
+                    MC_CAPS_RED_GREEN_BLUE_GAIN = 0x00000010,
+                    MC_CAPS_RED_GREEN_BLUE_DRIVE = 0x00000020,
+                    MC_CAPS_DEGAUSS = 0x00000040,
+                    MC_CAPS_DISPLAY_AREA_POSITION = 0x00000080,
+                    MC_CAPS_DISPLAY_AREA_SIZE = 0x00000100,
+                    MC_CAPS_RESTORE_FACTORY_DEFAULTS = 0x00000400,
+                    MC_CAPS_RESTORE_FACTORY_COLOR_DEFAULTS = 0x00000800,
+                    MC_RESTORE_FACTORY_DEFAULTS_ENABLES_MONITOR_SETTINGS = 0x00001000
+                }
+
+                [Flags]
+                public enum MC_SUPPORTED_COLOR_TEMPERATURE
+                {
+                    MC_SUPPORTED_COLOR_TEMPERATURE_NONE = 0x00000000,
+                    MC_SUPPORTED_COLOR_TEMPERATURE_4000K = 0x00000001,
+                    MC_SUPPORTED_COLOR_TEMPERATURE_5000K = 0x00000002,
+                    MC_SUPPORTED_COLOR_TEMPERATURE_6500K = 0x00000004,
+                    MC_SUPPORTED_COLOR_TEMPERATURE_7500K = 0x00000008,
+                    MC_SUPPORTED_COLOR_TEMPERATURE_8200K = 0x00000010,
+                    MC_SUPPORTED_COLOR_TEMPERATURE_9300K = 0x00000020,
+                    MC_SUPPORTED_COLOR_TEMPERATURE_10000K = 0x00000040,
+                    MC_SUPPORTED_COLOR_TEMPERATURE_11500K = 0x00000080
+                }
+
+                public enum LPMC_VCP_CODE_TYPE
+                {
+                    MC_MOMENTARY,
+                    MC_SET_PARAMETER
+                }
                 #endregion
+
+
             }
 
+            public class SafePhysicalMonitorHandle : SafeHandle
+            {
+                public SafePhysicalMonitorHandle(IntPtr handle) : base(IntPtr.Zero, true)
+                {
+                    this.handle = handle; // IntPtr.Zero may be a valid handle.
+                }
+
+                public override bool IsInvalid => false; // The validity cannot be checked by the handle.
+
+                protected override bool ReleaseHandle()
+                {
+                    return PhysicalMonitorEnumerationApi.DestroyPhysicalMonitor(handle);
+                }
+            }
             public static class HighlevelMonitorConfigurationApi
             {
                 #region Flags
