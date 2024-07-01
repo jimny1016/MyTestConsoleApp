@@ -1,16 +1,8 @@
-﻿using Emgu.CV.Dnn;
-using Emgu.CV.ML;
-using Emgu.CV.XFeatures2D;
-using System.ComponentModel;
-using System.Diagnostics.Contracts;
-using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using System.Text;
 using Vanara.PInvoke;
-using WindowsDisplayAPI;
 using static MyTestConsoleApp.MyTestClass.Win32.Dxva2;
 using static MyTestConsoleApp.MyTestClass.Win32.Dxva2.PhysicalMonitorEnumerationApi;
-using static Vanara.PInvoke.Gdi32;
 using static Vanara.PInvoke.User32;
 
 public class DDCCIControl
@@ -18,7 +10,13 @@ public class DDCCIControl
     byte[] allBytes = new byte[] { 0x02, 0x04, 0x05, 0x06, 0x08, 0x0B, 0x0C, 0x10, 0x12, 0x14, 0x16, 0x18, 0x1A, 0x52, 0x60, 0x87, 0xAC, 0xAE, 0xB2, 0xB6, 0xC6, 0xC8, 0xCA, 0xCC, 0xD6, 0xDF, 0xFD, 0xFF };
     public DDCCIControl()
     {
-        EnumDisplayMonitors(IntPtr.Zero, null, MonitorEnumProc1, IntPtr.Zero);
+        try {
+            Console.WriteLine("Trying find Y70...");
+            EnumDisplayMonitors(IntPtr.Zero, null, MonitorEnumProc1, IntPtr.Zero);
+        } catch(Exception e)
+        {
+            Console.WriteLine($"Fail... ex:{e}");
+        }
     }
 
     private bool MonitorEnumProc1(IntPtr Arg1, IntPtr Arg2, PRECT Arg3, IntPtr Arg4)
@@ -45,8 +43,12 @@ public class DDCCIControl
                     {
                         continue;
                     }
-
+                    //SetVCPFeature(physicalMonitor.hPhysicalMonitor, 0x14, 0x0B);
+                    //SetVCPFeature(physicalMonitor.hPhysicalMonitor, 0x0C, 0x3F);
+                    //SetVCPFeature(physicalMonitor.hPhysicalMonitor, 0x10, 0x64);
+                    //SetMonitorRGB(physicalMonitor.hPhysicalMonitor, 0x0A, 0x0A, 0x0A);
                     PrintAllByteValue(physicalMonitor.hPhysicalMonitor);
+                    StartChangeRGB(physicalMonitor);
                     // Set the monitor RGB values
                     //SetMonitorRGB(physicalMonitor.hPhysicalMonitor, 0x0A, 0x0A, 0x0A);
                     //CheckVCPFeatureSupport(physicalMonitor.hPhysicalMonitor, 0x16);
@@ -99,34 +101,37 @@ public class DDCCIControl
     }
     private void StartChangeRGB(PHYSICAL_MONITOR physicalMonitor)
     {
-        int i = 0;
+        int min = 0;
+        int max = 100;
+        int i = max;
         bool isup = true;
         int scope = 3;
         while (true)
         {
             Console.WriteLine(i);
-            SetMonitorRGB(physicalMonitor.hPhysicalMonitor, (byte)i, (byte)i, (byte)i);
+            SetVCPFeature(physicalMonitor.hPhysicalMonitor, 0x10, (byte)i);
+            //SetMonitorRGB(physicalMonitor.hPhysicalMonitor, (byte)i, (byte)i, (byte)i);
             if (isup)
                 i += scope;
             else
                 i -= scope;
 
-            if (i >= 100)
+            if (i >= max)
             {
-                i = 100;
+                i = max;
                 isup = false;
             }
 
-            if (i <= 0)
+            if (i <= min)
             {
-                i = 0;
+                i = min;
                 isup = true;
             }
 
-            if (i > 60)
+            if (i > max)
                 scope = 5;
-            if (i < 60 && i < 40)
-                scope = 3;
+            if (i < max && i < 40)
+                scope = 2;
             if (i < 40)
                 scope = 1;
             //Thread.Sleep(10);
